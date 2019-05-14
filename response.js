@@ -5,8 +5,12 @@ K = require("KBManager.js");
 Git= require("Git.js");
 U =require("Utils.js");
 File = require("File.js")
-G = require("GLOBAL.js")
-R = require("Router.js")
+GLOBAL = require("GLOBAL.js")
+Router = require("Router.js")
+
+for (var i in GLOBAL) {
+    this[i] = GLOBAL[i]
+
 
 function response(room, msg, sender, isGroupChat, replier, imageDB) {
     /** @param {String} room - 방 이름
@@ -17,16 +21,18 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
       * @param {Object} imageDB - 프로필 이미지와 수신된 이미지 캐싱 객체
       * @method imageDB.getImage() - 수신된 이미지가 있을 경우 Base64 인코딩 되어있는 JPEG 이미지 반환, 기본 값 null
       * @method imageDB.getProfileImage() - Base64 인코딩 되어있는 JPEG 프로필 이미지 반환, 기본 값 null
-      * @method replier.reply("문자열") - 메시지가 도착한 방에 답장을 보내는 메소드 */
+      * @method replier.reply("문자열") - 메시지가 도착한 방에 답장을 보내는 메소드 
+      */
+
         I.run(room, sender, msg);
         //인터렉티브 적용
         var r = { replier: replier, msg: msg, sender: sender, room: room};
 
         try {
-            if(msg =="!로딩" ){
+            if(r.msg =="!로딩" || r.room=="시립대 봇제작방"){
                 r.replier.reply("로딩시작")
                     U.update();
-                    U.reload()
+                    U.reload();
                     return;
             }else if (msg.indexOf("*") == 0) {
                 replier.reply(String(eval(msg.substring(1))).encoding());
