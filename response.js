@@ -1,10 +1,10 @@
-var T = require("ThreadManager.js");
-var I = require("Interactive.js");
-var D = require("DBManager.js")("DB");
-var K = require("KBManager.js");
-var Git= require("Git.js");
-var U =require("Utils.js");
-var File = require("File.js")
+T = require("ThreadManager.js");
+I = require("Interactive.js");
+D = require("DBManager.js")("DB");
+K = require("KBManager.js");
+Git= require("Git.js");
+U =require("Utils.js");
+File = require("File.js")
 G = require("GLOBAL.js")
 
 
@@ -24,6 +24,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
 
         try {
             if(msg =="!로딩" ){
+                r.replier.reply("로딩시작")
                     U.update();
                     U.reload()
                     return;
