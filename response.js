@@ -11,6 +11,10 @@ Router = require("Router.js")
 for (var i in GLOBAL) {
     this[i] = GLOBAL[i]
 }
+function 광주버스정류장불러오기(){
+    bis = File.JSONread("/sdcard/test.json")
+    return bis
+}
 
 function response(room, msg, sender, isGroupChat, replier, imageDB) {
     /** @param {String} room - 방 이름
@@ -23,11 +27,12 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
       * @method imageDB.getProfileImage() - Base64 인코딩 되어있는 JPEG 프로필 이미지 반환, 기본 값 null
       * @method replier.reply("문자열") - 메시지가 도착한 방에 답장을 보내는 메소드 
       */
+    
 
         I.run(room, sender, msg);
         //인터렉티브 적용
         var r = { replier: replier, msg: msg, sender: sender, room: room};
-
+        광주버스정류장불러오기();
         try {
             if(r.msg =="!로딩" && r.room=="시립대 봇제작방"){
                 r.replier.reply("로딩시작")
