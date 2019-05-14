@@ -1,12 +1,12 @@
-T = require("ThreadManager.js");
-I = require("Interactive.js");
-D = require("DBManager.js")("DB");
-K = require("KBManager.js");
-Git= require("Git.js");
-U =require("Utils.js");
-File = require("File.js")
+T = require("/modules/ThreadManager.js");
+I = require("/modules/Interactive.js");
+D = require("/modules/DBManager.js")("DB");
+K = require("/modules/KBManager.js");
+Git= require("/modules/Git.js");
+U =require("/modules/Utils.js");
+File = require("/modules/File.js")
 G = require("GLOBAL.js")
-
+R = require("Router.js")
 
 function response(room, msg, sender, isGroupChat, replier, imageDB) {
     /** @param {String} room - 방 이름
