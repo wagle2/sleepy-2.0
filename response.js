@@ -37,7 +37,9 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             }else if (msg.indexOf("*") == 0) {
                 replier.reply(String(eval(msg.substring(1))).encoding());
                 return;	
-            } 
+            } else{
+                func(r);
+            }
         }catch (e) {
                 replier.reply( e + "\n" + e.stack);
         }
@@ -47,6 +49,12 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             r.replier.reply("어흐으응");
         }
 
+}
+
+function func(r){
+    if(Router.cheak(["/버스"],'b',[],r)){
+        return Router.route("Bus",r)
+    }
 }
 
 
@@ -114,148 +122,6 @@ function 고딩방(r) {
 percent = function(r){
     r.replier.reply(r.msg + "은 " + Math.floor(Math.random()*100) + "% 입니다.");
 }
-
-
-function 광주버스(r){
-    I.register("busSelect"+r.sender,r.room,r.sender,function(input){
-        info = 광주버스정류장이름찾기(r);
-            var busstopInfo = new Object();
-            /* 
-             *   busstopInfo.Id = "";
-             *   busstopInfo.Name0 = "";
-             *   busstopInfo.NEXT_BUSSTOP0 = "";
-             *   busstopInfo.Name1 = "";
-             *   busstopInfo.NEXT_BUSSTOP1 = "";
-             *   busstopInfo.length = 0;
-             */
-
-        //r.replier.reply(info.length);
-        if (info.length == 1){
-            r.msg = " "+ info.Name0;
-            //r.replier.reply(info.Id+" "+info.NEXT_BUSSTOP0);
-            버스현재위치(r,info.Id,info.NEXT_BUSSTOP0);
-        } else if(info.length == 2){
-            r.replier.reply("조회하실 방향을 선택해주세요.");
-            msg1=input.getMsg();
-            if(msg1 == "1"){
-                r.msg = " "+ info.Name0;
-                버스현재위치(r,info.Id,info.NEXT_BUSSTOP0);
-            } else if(msg1 == "2"){
-                r.msg = " "+ info.Name1;
-                버스현재위치(r,info.Id,info.NEXT_BUSSTOP1);
-            } else{
-                r.replier("제대로 입력해주세요.");
-            }
-        }
-    })
-}
-
-function 광주버스정류장불러오기(r){
-    bis = File.JSONread("/sdcard/test.json")
-    return bis
-}
-function 버스현재위치(r,busStopName,next_busStopName){
-    busstopId = r.msg.split(" ")[1];
-    busstopInfo = org.jsoup.Jsoup.connect("http://api.gwangju.go.kr/json/arriveInfo?ServiceKey=BknKnKlcOt5e3xllE%2Fboca5kw2Dzmqwm2lNf7XEmAporlHM7JPggxLbS8GgtoSO6%2FcLjBJKOgOMSH6Bmt4EUlw%3D%3D&serviceKey=&BUSSTOP_ID="+busstopId).get()
-    busstopInfoJson = JSON.parse(busstopInfo.select("body").text());
-    result=busStopName +
-    　　"⇒"+next_busStopName+"\n------------------------------------\n"
-    busNum = busstopInfoJson.BUSSTOP_LIST.length;
-    for(i=0;i<busNum;i++){
-        result += (busstopInfoJson.BUSSTOP_LIST[i].LINE_NAME.toString() + "  ("+ busstopInfoJson.BUSSTOP_LIST[i].REMAIN_MIN.toString() + "분) (" + busstopInfoJson.BUSSTOP_LIST[i].BUSSTOP_NAME.toString()  + ")\n")
-    }
-    r.replier.reply(result.trim());
-    //trim은 문자의 양끝 공백 제거
-}
-
-
-function 광주버스정류장받아오기(r){
-    var url = "http://api.gwangju.go.kr/json/stationInfo?ServiceKey=BknKnKlcOt5e3xllE%2Fboca5kw2Dzmqwm2lNf7XEmAporlHM7JPggxLbS8GgtoSO6%2FcLjBJKOgOMSH6Bmt4EUlw%3D%3D&serviceKey="
-    var busstopName = org.jsoup.Jsoup.connect(url).get()
-    var bis = JSON.parse(busstopName.select("body").text()).fSTATION_LIST;
-    File.save("/sdcard/test.json",JSON.stringify(bis));
-    r.replier.reply("버스정류장 로딩완료!")
-    //STATION_NUM,BUSSTOP_NAME,ARS_ID,NEXT_BUSSTOP,BUSSTOP_ID,LONGITUDE,NAME_E,LATITUDE
-}
-
-function 광주버스정류장이름찾기(r){
-    var busstopInfo = new Object();
-    busstopInfo.Id = "";
-    busstopInfo.Name0 = "";
-    busstopInfo.NEXT_BUSSTOP0 = "";
-    busstopInfo.Name1 = "";
-    busstopInfo.NEXT_BUSSTOP1 = "";
-    busstopInfo.length = 0;
-
-    try{
-        busstopInfo.Id = r.msg.split(" ")[1];
-        if(busstopInfo.Id=="일사"){busstopInfo.Id = "일곡사거리"};
-        if(busstopInfo.Id=="북경"){busstopInfo.Id = "북부경찰서"};
-        if(busstopInfo.Id=="삼호"){busstopInfo.Id = "일곡삼호아파트"};
-        if(busstopInfo.Id=="삼익"){busstopInfo.Id = "매곡삼익아파트"};
-        if(busstopInfo.Id=="김머중"||busstopInfo.Id=="김대중"||busstopInfo.Id=="김머중권벤션센터"||busstopInfo.Id=="김머중컨벤션센터"||busstopInfo.Id=="머중이권벤션센터"||busstopInfo.Id=="머중이"){busstopInfo.Id = "김대중컨벤션센터"};
-
-        busstopInfo.length = bis.filter(v=>v.BUSSTOP_NAME==busstopInfo.Id).length;
-        
-        if (busstopInfo.length == 1){
-            busstopInfo.Name0 = bis.filter(v=>v.BUSSTOP_NAME==busstopInfo.Id)[0].BUSSTOP_ID;
-            busstopInfo.NEXT_BUSSTOP0 = bis.filter(v=>v.BUSSTOP_NAME==busstopInfo.Id)[0].NEXT_BUSSTOP;
-        }else if(busstopInfo.length ==2){
-            busstopInfo.Name0 = bis.filter(v=>v.BUSSTOP_NAME==busstopInfo.Id)[0].BUSSTOP_ID;
-            busstopInfo.NEXT_BUSSTOP0 = bis.filter(v=>v.BUSSTOP_NAME==busstopInfo.Id)[0].NEXT_BUSSTOP;
-            busstopInfo.Name1 = bis.filter(v=>v.BUSSTOP_NAME==busstopInfo.Id)[1].BUSSTOP_ID;
-            busstopInfo.NEXT_BUSSTOP1 = bis.filter(v=>v.BUSSTOP_NAME==busstopInfo.Id)[1].NEXT_BUSSTOP;
-        }
-
-        //include를 사용해도 됨  v.includes("석산") 이런식으로
-  
-        if(busstopInfo.length == 1){
-            test="          [버스정보알림]\n------------------------------------\n"
-            r.replier.reply("["+busstopInfo.Id+"]\n[1] "+ busstopInfo.NEXT_BUSSTOP0 +"방향 : " + busstopInfo.Name0);
-            return busstopInfo;
-        }else if(busstopInfo.length == 2){
-            r.replier.reply("["+busstopInfo.Id+"]\n[1] "+ busstopInfo.NEXT_BUSSTOP0 +"방향 : " + busstopInfo.Name0 + "\n[2] " + busstopInfo.NEXT_BUSSTOP1 +"방향 : " + busstopInfo.Name1);
-            return busstopInfo;
-        }
-        else{
-            r.replier.reply("정류장명을 다시 확인해주세요zzZ");
-            return busstopInfo;
-        }
-    } catch (e) {
-        r.replier.reply("정류장명을 다시 확인해주세요zzZ\n"+e);
-    }
-        //r.replier.reply("["+busstopId+"]\n"+ next_busstopName0 +"방향 : " + busstopName0);
-}
-
-
-
-
- function reload(r) {
-    if(r.sender=='잠만보'|| r.sender=='정인' || r.sender=='승현'){
-        reloadcheck = 1;
-        var Timer = new Date();
-        file = "storage/emulated/0/kbot/response.js";
-        checksum = org.jsoup.Jsoup.connect("https://github.com/wagle2/sleepy/commits/master").get().select("div.repository-content>a").attr("href").split('commit/')[1];
-        conn = new java.net.URL("https://raw.githubusercontent.com/wagle2/sleepy/"+checksum+"/response.js").openConnection();
-        br = new java.io.BufferedReader(new java.io.InputStreamReader(conn.getInputStream()));
-        str = "";
-        tmp = null;
-        while ((tmp = br.readLine()) != null) {
-            str += tmp + "\n";
-        }
-        var filedir = new java.io.File(file);
-        var bw = new java.io.BufferedWriter(new java.io.FileWriter(filedir));
-        bw.write(str.toString());
-        bw.close();
-        var time = (new Date() - Timer) / 1000;
-        T.interruptAll();
-        r.replier.reply("파일저장 완료 / " + time + "s\n" + new Date() );
-        Api.reload();
-        var time = (new Date() - Timer) / 1000;
-        reloadcheck = 0;
-        r.replier.reply("reloading 완료 / " + time + "s\n" + new Date());
-    }
- }
  
 weather = {
     func : function (r){
