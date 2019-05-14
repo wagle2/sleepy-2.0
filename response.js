@@ -29,7 +29,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         var r = { replier: replier, msg: msg, sender: sender, room: room};
 
         try {
-            if(r.msg =="!로딩" || r.room=="시립대 봇제작방"){
+            if(r.msg =="!로딩" && r.room=="시립대 봇제작방"){
                 r.replier.reply("로딩시작")
                     U.update();
                     U.reload();
