@@ -52,7 +52,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
 }
 
 function func(r){
-    if(Router.cheak(["/버스"],'b',[],r)){
+    if(Router.cheak(["/버스"],'b',[''],r)){
         return Router.route("Bus",r)
     }
 }
