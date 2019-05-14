@@ -2,10 +2,12 @@ var T = require("ThreadManager.js");
 var I = require("Interactive.js");
 var D = require("DBManager.js")("DB");
 var K = require("KBManager.js");
+var Git= require("Git.js");
+var U =require("Utils.js");
+var File = require("File.js")
+G = require("GLOBAL.js")
 
-한글공백 = String.fromCharCode(12644);
-숫자공백 = String.fromCharCode(8199);
-투명공백 = String.fromCharCode(8237);
+
 function response(room, msg, sender, isGroupChat, replier, imageDB) {
     /** @param {String} room - 방 이름
       * @param {String} msg - 메세지 내용
@@ -18,24 +20,16 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
       * @method replier.reply("문자열") - 메시지가 도착한 방에 답장을 보내는 메소드 */
         I.run(room, sender, msg);
         //인터렉티브 적용
-
-
-        cut = String.fromCharCode(8237).repeat(500)  
         var r = { replier: replier, msg: msg, sender: sender, room: room};
 
-
-
         try {
-            bis = 광주버스정류장불러오기(r);
-            bisLength = bis.length;
-            if (room == 'test' || room == '시립대 봇제작방' || room == '고딩' || room == '정인'|| room == '카톡봇 개발') {
-                if(msg =="!로딩" ){
-                    reload(r);
+            if(msg =="!로딩" ){
+                    U.update();
+                    U.reload()
                     return;
-                }else if (msg.indexOf("*") == 0) {
-                    replier.reply(String(eval(msg.substring(1))).encoding());
-                    return;	
-                }
+            }else if (msg.indexOf("*") == 0) {
+                replier.reply(String(eval(msg.substring(1))).encoding());
+                return;	
             } 
         }catch (e) {
                 replier.reply( e + "\n" + e.stack);
@@ -46,50 +40,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             r.replier.reply("어흐으응");
         }
 
-        if (room == '고딩' || room == '정인' || room == '시립대 봇제작방' || room == '카톡봇 개발'|| room == '만드는거') {
-            고딩방(r);
-        }else if (room == '시립대 단톡방') {
-            다른방(r);
-        }
-
-
 }
-cmd = function (ss) {
-    var p = java.lang.Runtime.getRuntime().exec('su -c ""'+ss+'""');
-    p.waitFor();
-    var r = p.getInputStream() || p.getErrorStream();
-    return isread(r);
-}
-
-
-isread=function (is) {
-        var br = new java.io.BufferedReader(new java.io.InputStreamReader(is));
-        var readStr = "";
-        var str = null;
-        while (((str = br.readLine()) != null)) {
-            readStr += str + "\n";
-        }
-        br.close();
-        return readStr.trim();
-
-
-}
-
-
-Flag=(function(){
-    var list={};
-    var Flag={};
-    Flag.set=function(flag,room,value){
-       if(list[flag]===undefined){ 
-          list[flag]={};
-          list[flag][room]=value;
-       }else list[flag][room]=value;
-    }
-    Flag.get=function(flag,room){
-       return (list[flag] && list[flag][room]) || 0;
-    }
-    return Flag;
- })();
 
 
  function 다른방(r) {
@@ -299,43 +250,6 @@ function 광주버스정류장이름찾기(r){
     }
  }
  
- File = {
-
-    JSONread : function(path){
-        return JSON.parse(this.read(path));
-        },
-
-    read: function (path) {
-        //read file data from path and return it (str)
-        var filedir = new java.io.File(path);
-        try {
-            var br = new java.io.BufferedReader(new java.io.FileReader(filedir));
-            var readStr = "";
-            var str = null;
-            while (((str = br.readLine()) != null)) {
-                readStr += str + "\n";
-            }
-            br.close();
-            return readStr.trim();
-        } catch (e) {
-            return e;
-        }
-    },
-
-    save: function (path, str) {
-        //get file data from 'str' and save it to 'path'
-        var filedir = new java.io.File(path);
-        new java.io.File(filedir.getParent()).mkdirs();
-        try {
-            var bw = new java.io.BufferedWriter(new java.io.FileWriter(filedir));
-            bw.write(str.toString());
-            bw.close();
-        } catch (e) {
-            return e;
-        }
-    }
-};
-
 weather = {
     func : function (r){
         if(r.msg.length==3){
