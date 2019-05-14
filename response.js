@@ -1,10 +1,10 @@
-T = require("/modules/ThreadManager.js");
-I = require("/modules/Interactive.js");
-D = require("/modules/DBManager.js")("DB");
-K = require("/modules/KBManager.js");
-Git= require("/modules/Git.js");
-U =require("/modules/Utils.js");
-File = require("/modules/File.js")
+T = require("node_modules/modules/ThreadManager.js");
+I = require("node_modules/modules/Interactive.js");
+D = require("node_modules/modules/DBManager.js")("DB");
+K = require("node_modules/modules/KBManager.js");
+Git= require("node_modules/modules/Git.js");
+U =require("node_modules/modules/Utils.js");
+File = require("node_modules/modules/File.js")
 G = require("GLOBAL.js")
 R = require("Router.js")
 
