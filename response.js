@@ -10,7 +10,7 @@ Router = require("Router.js")
 
 for (var i in GLOBAL) {
     this[i] = GLOBAL[i]
-
+}
 
 function response(room, msg, sender, isGroupChat, replier, imageDB) {
     /** @param {String} room - 방 이름
@@ -469,6 +469,7 @@ Object.defineProperty(Date.prototype,"toDateString",{
 		java.lang.Thread.sleep(59*1000); //59초
 	}
 }).start();
+
 //이 아래 6가지 메소드는 스크립트 액티비티에서 사용하는 메소드들
 function onCreate(savedInstanceState, activity) {}
 function onStart(activity) {}
